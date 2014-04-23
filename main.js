@@ -1,6 +1,16 @@
 
-  
 
+if (!String.prototype.supplant) {
+    String.prototype.supplant = function (o) {
+        return this.replace(
+            /\{([^{}]*)\}/g,
+            function (a, b) {
+                var r = o[b];
+                return typeof r === 'string' || typeof r === 'number' ? r : a;
+            }
+        );
+    };
+}
 
 var FoodItem = function(name, calories, vegan, glutenFree, citrusFree){
 	this.name = name;
@@ -8,10 +18,12 @@ var FoodItem = function(name, calories, vegan, glutenFree, citrusFree){
 	this.vegan = vegan;
 	this.glutenFree = glutenFree;
 	this.citrusFree = citrusFree;
-
-	return name + calories + vegan + glutenFree + citrusFree;
 };
-FoodItem.prototype.constructor = FoodItem;
+
+FoodItem.prototype.create =  function(){
+		return $('<div class="food-item">{name}</div>'.supplant(this));
+};
+
 FoodItem.prototype.toString = function(){
 	var v = "";
 
@@ -36,6 +48,9 @@ var Item = function(name, description, price, foodItems) {
 	this.price= price;
 	this.foodItems= foodItems;
 }
+Item.prototype.create =  function(){
+		return $('<div class="Item">{name}</div>'.supplant(this));
+};
 
 var getName = function(obj) {
 	return obj.name;
@@ -95,20 +110,26 @@ var Order= function(orderNum, arr) {
 	this.arr = arr;
 	// orderNum+" : "+arr;
 }
-Order.prototype.constructor= Order;
-
+Order.prototype.create =  function(){
+		return $('<div class="Order">{name}</div>'.supplant(this));
+};
 
 var Menu = function(arr) {
 	this.arr = arr;
 }
-Menu.prototype.constructor= Menu;
+
+Menu.prototype.create =  function(){
+		return $('<div class="Menu">{name}</div>'.supplant(this));
+};
 
 var Restaurant = function (name, description, Menu) {
 	this.name = name;
 	this.description= description;
 	this.Menu = Menu;
 }
-Restaurant.prototype.constructor= Restaurant;
+ Restaurant.prototype.create =  function(){
+		return $('<header class="Restaurant">{name}</header>'.supplant(this));
+};
 
 
 var Customer = function(vegan, glutenFree, citrusFree) {
@@ -116,8 +137,10 @@ var Customer = function(vegan, glutenFree, citrusFree) {
 	this.glutenFree = glutenFree;
 	this.citrusFree = citrusFree;
 }
-Customer.prototype.constructor= Customer;
 
+Customer.prototype.create =  function(){
+		return $('<div class="Customer">{name}</div>'.supplant(this));
+};
 
 
 Drink.prototype.toString = function () {
@@ -153,6 +176,7 @@ Customer.prototype.toString = function() {
 	return "Hi, my diet: \n"+ v+'\n'+gf+'\n'+cf
 }
 
+
 var apple = new FoodItem('apple', 20, false, true, false);
 var cottonCandy = new FoodItem ('cotton candy', 300, true, true, true);
 var bagel = new FoodItem ('bagel', 100, true, false, true);
@@ -184,3 +208,13 @@ console.log(superMenu)
 
 
 
+$(document).on('ready', function(){ 
+	var container =  $('<div class = "container"></div>');
+	$('body').append(container).append(superRest.create());
+	$('body').append($('<nav id = "nav">Plates & Drinks</nav>'));
+
+		
+
+
+
+});

@@ -1,0 +1,16 @@
+header{
+background-color: red;
+height: 4em;
+color: white;
+text-align: center;
+padding-top: 10px;
+
+}
+
+nav{
+background-color: green;
+height: 2em;
+text-align: center;
+color: white;
+padding-top: 10px;
+}
