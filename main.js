@@ -1,5 +1,5 @@
 
-
+// Function to use supplant in program
 if (!String.prototype.supplant) {
     String.prototype.supplant = function (o) {
         return this.replace(
@@ -12,6 +12,10 @@ if (!String.prototype.supplant) {
     };
 }
 
+
+
+
+// All constructors and superclasses
 var FoodItem = function(name, calories, vegan, glutenFree, citrusFree){
 	this.name = name;
 	this.calories = calories;
@@ -19,7 +23,46 @@ var FoodItem = function(name, calories, vegan, glutenFree, citrusFree){
 	this.glutenFree = glutenFree;
 	this.citrusFree = citrusFree;
 };
+var Item = function(name, description, price, foodItems) {
+	this.name= name;
+	this.description= description;
+	this.price= price;
+	this.foodItems= foodItems;
+}
+var Drink = function(name,description,price,foodItems) {
+	Item.call(this,name,description,price,foodItems)
+};
 
+Drink.prototype = new Item();
+Drink.prototype.constructor = Drink;
+var Plate = function(name,description,price,foodItems) {
+	Item.call(this,name,description,price,foodItems)
+};
+
+Plate.prototype = new Item();
+Plate.prototype.constructor = Plate;
+var Menu = function(arr) {
+	this.arr = arr;
+}
+
+var Order= function(orderNum, arr) {
+	this.orderNum = orderNum;
+	this.arr = arr;
+	// orderNum+" : "+arr;
+}
+var Restaurant = function (name, description, Menu) {
+	this.name = name;
+	this.description= description;
+	this.Menu = Menu;
+}
+var Customer = function(vegan, glutenFree, citrusFree) {
+	this.vegan = vegan;
+	this.glutenFree = glutenFree;
+	this.citrusFree = citrusFree;
+}
+
+
+// ---------- Prototype methods-----------------------------
 FoodItem.prototype.create =  function(){
 		return $('<div class="food-item">{name}</div>'.supplant(this));
 };
@@ -42,42 +85,10 @@ FoodItem.prototype.toString = function(){
 	}
 
 
-var Item = function(name, description, price, foodItems) {
-	this.name= name;
-	this.description= description;
-	this.price= price;
-	this.foodItems= foodItems;
-}
+
 Item.prototype.create =  function(){
-		return $('<div class="Item">{name}</div>'.supplant(this));
+		return $('<li class="Item"><span class= "itemName">{name}</span>   $<span class= "itemPrice">{price}</span></li>'.supplant(this));
 };
-
-var getName = function(obj) {
-	return obj.name;
-};
-
-var getMenu = function(obj) {
-	return obj.name + " $"+obj.price;
-};
-
-
-var Drink = function(name,description,price,foodItems) {
-	Item.call(this,name,description,price,foodItems)
-};
-Drink.prototype = new Item();
-Drink.prototype.constructor = Drink;
-// var drinkInfo = function(Drink) {
-// 	this.Drink = Drink;
-// 	return Drink.name +" is "+Drink.description+ "and costs "+Drink.price+". It contains "+Drink.ingredients+"for ingredients."; 
-// };
-
-
-
-var Plate = function(name,description,price,foodItems) {
-	Item.call(this,name,description,price,foodItems)
-};
-Plate.prototype = new Item();
-Plate.prototype.constructor = Plate;
 
 Item.prototype.dietaryCheck = function(diet) {
 
@@ -90,53 +101,56 @@ Item.prototype.dietaryCheck = function(diet) {
 	// return v;
 // console.log('Hello',this.foodItems[0][diet], this.foodItems[1][diet], this.foodItems[2][diet]);
 
-for (var i = 0; i < this.foodItems.length; i++) {
-		this.foodItems[i]
-	// v = this.foodItems[i] === true ? 'Is suitable for vegan meals' : 'Is not suitable';
-	if (this.foodItems[i][diet] === true) {
 
-	}else {
-		 return "Is not suitable";
-	}
-	console.log (this.foodItems[i]);
+		for (var i = 0; i < this.foodItems.length; i++) {
+				this.foodItems[i]
+			// v = this.foodItems[i] === true ? 'Is suitable for vegan meals' : 'Is not suitable';
+			if (this.foodItems[i][diet] === true) {
 
+			}
+			else {
+				 return "Is not suitable";
+			}
+			console.log (this.foodItems[i]);
+
+		};
+		// On dietary check pass, add that diet as a class to the Item
+			 return "Is suitable for " + [diet] + " meals";
+			// return v;
 };
-	 return "Is suitable for " + [diet] + " meals";
-	// return v;
-	};
 
-var Order= function(orderNum, arr) {
-	this.orderNum = orderNum;
-	this.arr = arr;
-	// orderNum+" : "+arr;
-}
+
+
+
+
+
+// var drinkInfo = function(Drink) {
+// 	this.Drink = Drink;
+// 	return Drink.name +" is "+Drink.description+ "and costs "+Drink.price+". It contains "+Drink.ingredients+"for ingredients."; 
+// };
+
+
+
+
+
+
+
 Order.prototype.create =  function(){
 		return $('<div class="Order">{name}</div>'.supplant(this));
 };
 
-var Menu = function(arr) {
-	this.arr = arr;
-}
 
 Menu.prototype.create =  function(){
 		return $('<div class="Menu">{name}</div>'.supplant(this));
 };
 
-var Restaurant = function (name, description, Menu) {
-	this.name = name;
-	this.description= description;
-	this.Menu = Menu;
-}
+
  Restaurant.prototype.create =  function(){
 		return $('<header class="Restaurant">{name}</header>'.supplant(this));
 };
 
 
-var Customer = function(vegan, glutenFree, citrusFree) {
-	this.vegan = vegan;
-	this.glutenFree = glutenFree;
-	this.citrusFree = citrusFree;
-}
+
 
 Customer.prototype.create =  function(){
 		return $('<div class="Customer">{name}</div>'.supplant(this));
@@ -158,6 +172,27 @@ Menu.prototype.toString = function () {
 	return this.arr.map(getMenu).join('\n');
 }
 
+Menu.prototype.menuCheck = function(diet) {
+
+
+		var suitableItems= [];
+		
+		for (var i = 0; i < this.arr.length; i++) {
+				var menuItems = this.arr[i]
+				console.log(menuItems);
+
+				// menuItems.dietaryCheck(diet);
+				console.log(menuItems.dietaryCheck(diet));
+			if( )
+			suitableItems;
+			console.log (suitableItems);
+
+		};
+		// 	 return suitableItems;
+		// 	// return v;
+};
+
+
 Restaurant.prototype.toString = function() {
 	return "Welcome to the "+this.name+"! We are a "+this.description+". Please enjoy our menu items:\n "+ this.Menu;
 }
@@ -176,7 +211,39 @@ Customer.prototype.toString = function() {
 	return "Hi, my diet: \n"+ v+'\n'+gf+'\n'+cf
 }
 
+// ------------------------------Functions----------------------------------
+var getName = function(obj) {
+	return obj.name;
+};
 
+var getMenu = function(obj) {
+	return obj.name + " $"+obj.price;
+};
+
+// 1. on page load, run a function that loops through the li Items on the page
+	var itemLoop = function (arr) {
+		var allItems = [];
+
+		console.log(arr);
+		for (var i = 0; i < arr.length; i++) {
+			var results = allItems.push(arr[i]);
+			console.log(arr.length);
+		};
+		console.log(allItems);
+		// return results;
+	};
+
+
+// 2. It needs to run .dietaryCheck on each Item for each dietary restriction 
+	// superMenu.filter(dietaryCheck(vegan))
+// 3. On a passing evalualtion it pushes that Item to that specific array (ie, veganArray, gfArray, cfArray)
+// 4. On click of a button, it hides the li Items not in the array 
+
+
+
+
+
+// -------------------------------------Varibles------------------------------------------------------
 var apple = new FoodItem('apple', 20, false, true, false);
 var cottonCandy = new FoodItem ('cotton candy', 300, true, true, true);
 var bagel = new FoodItem ('bagel', 100, true, false, true);
@@ -209,12 +276,20 @@ console.log(superMenu)
 
 
 $(document).on('ready', function(){ 
-	var container =  $('<div class = "container"></div>');
-	$('body').append(container).append(superRest.create());
-	$('body').append($('<nav id = "nav">Plates & Drinks</nav>'));
 
+$('#entrees').append(ribs.create());
+$('#entrees').append(spareRibs.create());
+$('#entrees').append(burrito.create());
+$('#entrees').append(guacamole.create());
+
+
+$('#drinks').append(margarita.create());
+$('#drinks').append(sprite.create());
 		
+// On click of a diet button, add highlight to every Item with that diet class
+$('.Item').on('click',function(){
+	$(this).addClass('highlight')});	
+// $('#button1').on('click' function(){
 
-
-
+// })
 });
