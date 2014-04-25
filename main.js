@@ -28,6 +28,8 @@ var Item = function(name, description, price, foodItems) {
 	this.description= description;
 	this.price= price;
 	this.foodItems= foodItems;
+	// sets display to null to create a reference in the DOM
+	this.display= null;
 }
 var Drink = function(name,description,price,foodItems) {
 	Item.call(this,name,description,price,foodItems)
@@ -87,7 +89,9 @@ FoodItem.prototype.toString = function(){
 
 
 Item.prototype.create =  function(){
-		return $('<li class="Item"><span class= "itemName">{name}</span>   $<span class= "itemPrice">{price}</span></li>'.supplant(this));
+		// creates an Item with a direct reference to itself that can be manipulated by the DOM
+		this.display= $('<li class="Item"><span class= "itemName">{name}</span>   $<span class= "itemPrice">{price}</span></li>'.supplant(this));
+		return this.display;
 };
 
 Item.prototype.dietaryCheck = function(diet) {
@@ -115,6 +119,8 @@ Item.prototype.dietaryCheck = function(diet) {
 
 		};
 		// On dietary check pass, add that diet as a class to the Item
+			// Use find to select the child of Item and add the class of diet to it
+			this.display.find('.itemName').addClass(diet);
 			 return "Is suitable for " + [diet] + " meals";
 			// return v;
 };
@@ -183,9 +189,9 @@ Menu.prototype.menuCheck = function(diet) {
 
 				// menuItems.dietaryCheck(diet);
 				console.log(menuItems.dietaryCheck(diet));
-			if( )
-			suitableItems;
-			console.log (suitableItems);
+			// if( )
+			// suitableItems;
+			// console.log (suitableItems);
 
 		};
 		// 	 return suitableItems;
@@ -233,6 +239,13 @@ var getMenu = function(obj) {
 		// return results;
 	};
 
+	var foodCheck = function (){
+		superMenu.menuCheck('vegan')
+	superMenu.menuCheck('glutenFree')
+	superMenu.menuCheck('citrusFree')
+
+};
+
 
 // 2. It needs to run .dietaryCheck on each Item for each dietary restriction 
 	// superMenu.filter(dietaryCheck(vegan))
@@ -244,9 +257,9 @@ var getMenu = function(obj) {
 
 
 // -------------------------------------Varibles------------------------------------------------------
-var apple = new FoodItem('apple', 20, false, true, false);
-var cottonCandy = new FoodItem ('cotton candy', 300, true, true, true);
-var bagel = new FoodItem ('bagel', 100, true, false, true);
+var apple = new FoodItem('apple', 20, true, true, true);
+var sauce = new FoodItem ('sauce', 300, true, true, false);
+var beef = new FoodItem ('beef', 100, false, true, true);
 var water= new FoodItem('water',0, true, true, true);
 var sugar= new FoodItem('sugar',50,true,true,true);
 var tortilla = new FoodItem('tortilla', 180, true, false, true);
@@ -258,8 +271,8 @@ var lime = new FoodItem('lime', 10, true, true, false);
 
 
 var sprite = new Drink('Sprite', 'Bubbly Goodness', 1.50, [water,sugar]);
-var ribs= new Plate('Ribs','BBQ Greatness', 10, [bagel]);
-var spareRibs = new Plate('Spare Ribs', 'Smaller BBQ Greatness', 8.50, [bagel,cottonCandy,apple]);
+var ribs= new Plate('Ribs','BBQ Greatness', 10, [beef]);
+var spareRibs = new Plate('Spare Ribs', 'Smaller BBQ Greatness', 8.50, [beef,sauce,apple]);
 var burrito = new Plate('Big Burrito', "Better than theirs", 7.50, [tortilla, beans]);
 var guacamole = new Plate('Guacamole', "Green and tasty", 4.50, [avocado, tomato]);
 var margarita = new Drink('Margarita', 'On the rocks', 7.50, [tequilla, lime]);
@@ -271,11 +284,12 @@ var superRest = new Restaurant("The Mexican Hog Pit","Best Place for Ribs and Bu
 var bbqDive = new Restaurant("The Hog Pit", "BBQ Place to Eat", bbqMenu);
 var billyBob = new Customer(true,false,true);
 
-console.log(superMenu)
 
 
 
 $(document).on('ready', function(){ 
+	
+
 
 $('#entrees').append(ribs.create());
 $('#entrees').append(spareRibs.create());
@@ -285,10 +299,23 @@ $('#entrees').append(guacamole.create());
 
 $('#drinks').append(margarita.create());
 $('#drinks').append(sprite.create());
-		
+foodCheck();
+
 // On click of a diet button, add highlight to every Item with that diet class
-$('.Item').on('click',function(){
-	$(this).addClass('highlight')});	
+$('.nav').on('click','.button',function(){
+	var btnSelector = $('.'+$(this).attr('data-class'));
+// $('.'+$(this).attr('data-class')).removeClass('highlight');
+$('.itemName').removeClass('highlight');
+	console.log($(this).attr('data-class'));
+	// if (btnSelector === true) {
+	// btnSelector.addClass('highlight')
+	// if ($('.vegan') === true) {
+	btnSelector.addClass('highlight');
+	// };
+});
+
+		// var btnSelector = this.display.itemName.vegan;
+// $('.'+$(this).attr('data-class')).toggleClass('highlight');
 // $('#button1').on('click' function(){
 
 // })
