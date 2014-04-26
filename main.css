@@ -50,7 +50,7 @@ header, nav{
 .container{
 	padding-top: 150px;
 	height: 200px;
-	width: 100%;
+	width: 32%;
 z-index: 1;
 position: relative
 
@@ -62,13 +62,21 @@ position: relative
 
 }
 
-.highlight{
+.highlight.vegan {
 	background-color: forestgreen;
-	color:white;
 	font-size: 1em;
 }
 
+.highlight.glutenFree  {
 
+	border: 2px solid peachpuff;
+	font-size:  1em;
+}
+
+.highlight.citrusFree{
+	color: white;
+	font-size:  1em;
+}
 
 
 

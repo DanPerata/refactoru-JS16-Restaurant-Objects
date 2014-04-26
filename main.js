@@ -115,7 +115,7 @@ Item.prototype.dietaryCheck = function(diet) {
 			else {
 				 return "Is not suitable";
 			}
-			console.log (this.foodItems[i]);
+			// console.log (this.foodItems[i]);
 
 		};
 		// On dietary check pass, add that diet as a class to the Item
@@ -185,10 +185,10 @@ Menu.prototype.menuCheck = function(diet) {
 		
 		for (var i = 0; i < this.arr.length; i++) {
 				var menuItems = this.arr[i]
-				console.log(menuItems);
+				// console.log(menuItems);
 
-				// menuItems.dietaryCheck(diet);
-				console.log(menuItems.dietaryCheck(diet));
+				menuItems.dietaryCheck(diet);
+				// console.log(menuItems.dietaryCheck(diet));
 			// if( )
 			// suitableItems;
 			// console.log (suitableItems);
@@ -285,8 +285,6 @@ var bbqDive = new Restaurant("The Hog Pit", "BBQ Place to Eat", bbqMenu);
 var billyBob = new Customer(true,false,true);
 
 
-
-
 $(document).on('ready', function(){ 
 	
 
@@ -299,18 +297,44 @@ $('#entrees').append(guacamole.create());
 
 $('#drinks').append(margarita.create());
 $('#drinks').append(sprite.create());
-foodCheck();
 
+$('#drinks').after('<p class="highlight glutenFree">Gluten Free: Gluten Free Highlight</p>');
+$('#drinks').after('<p class="highlight citrusFree">Citrus Free: Citrus Free Highlight</p>');
+$('#drinks').after('<p class="highlight vegan">Vegan: Vegan Highlight</p>');
+
+
+// $('<p>Gluten Free</p>').addClass('highlight').addClass('glutenFree')
+foodCheck();
+var unHighlight = true;
 // On click of a diet button, add highlight to every Item with that diet class
 $('.nav').on('click','.button',function(){
-	var btnSelector = $('.'+$(this).attr('data-class'));
+	unHighlight = !unHighlight
+	console.log(unHighlight)
+	if (unHighlight) {
+		$('.itemName').removeClass('highlight')
+	}
+	else {
+		var dietClass = $(this).attr('data-class')
+		var thisIsSIlly = dietClass.split(' ');
+		console.log(thisIsSIlly);
+		var dietToggle = function(){
+			for (var i = 0; i < thisIsSIlly.length; i++) {
+				// thisIsSIlly = thisIsSIlly[i];
+				var btnSelector = $('.' + thisIsSIlly[i]);
+				btnSelector.addClass('highlight');
+			};
+		};
+		dietToggle();
+	};
+	// var btnSelector = $('.' + thisIsSIlly[i]);
 // $('.'+$(this).attr('data-class')).removeClass('highlight');
-$('.itemName').removeClass('highlight');
-	console.log($(this).attr('data-class'));
+// $('.itemName').removeClass('highlight');
+	// console.log($(this).attr('data-class'));
+	// console.log(btnSelector);
 	// if (btnSelector === true) {
 	// btnSelector.addClass('highlight')
 	// if ($('.vegan') === true) {
-	btnSelector.addClass('highlight');
+	// btnSelector.toggleClass('highlight');
 	// };
 });
 
